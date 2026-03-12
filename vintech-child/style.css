@@ -1,0 +1,102 @@
+/*
+Theme Name: Vintech Child
+Theme URI: https://casethemes.net/
+Description: Tema hijo para Vintech (Personalizaciones Diprotec)
+Author: LOF Marketing
+Author URI: https://lofmarketing.com
+Template: vintech
+Version: 1.0.0
+*/
+
+/* ------------------------------------------------------------------------- *
+ * CORRECCIONES DE WOOCOMMERCE
+ * ------------------------------------------------------------------------- */
+
+/* Ocultar icono de carrito en botones que no son de compra activa (ej. 'Leer Más' sin stock) */
+.woocommerce ul.products li.product .woocommerce-product--buttons .woocommerce-add-to-cart a.button:not(.add_to_cart_button):before {
+    content: none !important;
+    display: none !important;
+}
+
+/* ------------------------------------------------------------------------- *
+ * CORRECCIÓN DE WIDGET DE CATEGORÍAS (Select2 / WooCommerce)
+ * Centra el texto, protege letras con cola (g, j, p) y fija la flecha rebelde
+ * ------------------------------------------------------------------------- */
+
+/* 1. Centrado vertical de la caja y el texto */
+.widget_product_categories .select2-container--default .select2-selection--single {
+    height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+    border-radius: 34px !important; 
+    position: relative !important;
+}
+
+.widget_product_categories .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 1 !important;
+    padding-top: 0 !important;
+    padding-bottom: 4px !important; /* Da espacio a la 'g' y la 'j' */
+    padding-left: 20px !important;
+    padding-right: 40px !important; /* Evita que el texto pise la flecha */
+    color: #000 !important;
+    width: 100% !important;
+}
+
+/* 2. Contenedor de la Flecha (Lo convertimos en una caja perfectamente centrada a la derecha) */
+.widget_product_categories .select2-container--default .select2-selection--single .select2-selection__arrow {
+    position: absolute !important;
+    height: 100% !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 45px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 3. La Flecha inyectada por el Tema (Le quitamos los estilos que la sacan volando) */
+.widget_product_categories .select2-container--default .select2-selection--single .select2-selection__arrow:after {
+    position: static !important; /* Anula el absolute que la manda hacia arriba */
+    transform: none !important; /* Anula el translateY */
+    height: auto !important; /* Anula el 100% de altura */
+    margin: 0 !important;
+    display: block !important;
+}
+
+/* 4. Por si acaso: Respaldo para NiceSelect (si alguna vez se desactiva Select2) */
+.widget_product_categories .nice-select {
+    height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+.widget_product_categories .nice-select .current {
+    line-height: 1 !important;
+    padding-bottom: 4px !important;
+}
+.widget_product_categories .nice-select:after {
+    top: 50% !important;
+    margin-top: -4px !important;
+    transform: rotate(45deg) !important;
+    right: 20px !important;
+}
+
+/**
+ * Forzar la actualización de los métodos de envío al cambiar campos en el checkout
+ */
+add_action( 'wp_footer', 'actualizar_envio_al_cambiar_region' );
+
+function actualizar_envio_al_cambiar_region() {
+    // Solo ejecutar en la página de checkout
+    if ( is_checkout() ) {
+        ?>
+        <script type="text/javascript">
+            (function($){
+                $(document.body).on('change', 'select#billing_state, input#billing_postcode', function(){
+                    // Forzar el evento de actualización de WooCommerce
+                    $('body').trigger('update_checkout');
+                });
+            })(jQuery);
+        </script>
+        <?php
+    }
+}

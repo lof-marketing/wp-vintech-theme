@@ -403,7 +403,7 @@ function vintech_woocommerce_sg_product_title() {
 			}
 		}
 
-		add_action('woocommerce_before_single_product_summary', 'custom_single_product_testimonial', 20);
+		// add_action('woocommerce_before_single_product_summary', 'custom_single_product_testimonial', 20);
 		function custom_single_product_testimonial() {
 			$single_testi_text = vintech()->get_theme_opt('single_testi_text', '');
 			$single_testi_title = vintech()->get_theme_opt('single_testi_title', '');
